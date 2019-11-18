@@ -4,7 +4,8 @@ import multiprocessing
 from multiprocessing import Pool
 import time
 # set file path
-filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
+#filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
+filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
 # load demo.xlsx 
 wb=load_workbook(filepath,data_only = True)
 # select demo.xlsx
@@ -16,11 +17,13 @@ max_column=sheet.max_column
 # iterate over all cells 
 # iterate over all rows
 
+
 list = [] #go back an name this main list
 list_for_1 = []
 list_for_2 = []
 list_for_3 = []
 list_for_4 = []
+
 
 def print_read1(k):
     alist = []
@@ -35,6 +38,8 @@ def print_read1(k):
         alist.append(cell_obj.value)  
      # print new line
     return alist
+
+
 
 def sort_to_lists():
     for i in list:
@@ -70,7 +75,9 @@ if __name__ == '__main__':
     print(list_for_2)
     print(list_for_3)
     print(list_for_4)
-    
+
     print(list[0][2])
+
+
 
 
