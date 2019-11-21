@@ -29,7 +29,7 @@ def print_read1(k):
     alist = []
     #for i in range(1,int(max_row/4)):
      
-     # iterate over all columns
+    # iterate over all columns
     for j in range(1,max_column+1):
           # get particular cell value    
         cell_obj=sheet.cell(row=k,column=j)
@@ -39,7 +39,31 @@ def print_read1(k):
      # print new line
     return alist
 
+def send_ms1_list(k):
+    list_ms1 = []
+    #for i in list:
+    #for n in k:
+    #for n in list[k]:
+    if list[k][:][2] == 1:
+        for j in range(1,max_column+1):
+                # get particular cell value    
+            cell_obj=sheet.cell(row=k,column=j)
+                # print cell value     
+                #list.append(cell_obj.value)
+            list_ms1.append(cell_obj.value) 
+    return list_ms1
 
+def send_ms2_list():
+    list_ms1 = []
+    return list_ms2
+
+def send_ms3_list():
+    list_ms1 = []
+    return list_ms3
+
+def send_ms4_list():
+    list_ms1 = []
+    return list_ms4
 
 def sort_to_lists():
     for i in list:
@@ -54,30 +78,54 @@ def sort_to_lists():
                 list_for_4.append(list[i][j])
 
 if __name__ == '__main__':
-    p1 = Pool(processes=50)
+    p1 = Pool(processes=10)
+    p2 = Pool(processes=10)
+    p3 = Pool(processes=10)
+    p4 = Pool(processes=10)
 
     data1 = p1.map(print_read1, [i for i in range(2,int(max_row/4))])
-    data2 = p1.map(print_read1, [i for i in range(int(max_row/4),int(max_row/4)*2)])
-    data3 = p1.map(print_read1, [i for i in range(int(max_row/4)*2,int(max_row/4)*3)])
-    data4 = p1.map(print_read1, [i for i in range(int(max_row/4)*3,max_row+1)])
+    data2 = p2.map(print_read1, [i for i in range(int(max_row/4),int(max_row/4)*2)])
+    data3 = p3.map(print_read1, [i for i in range(int(max_row/4)*2,int(max_row/4)*3)])
+    data4 = p4.map(print_read1, [i for i in range(int(max_row/4)*3,max_row+1)])
 
     p1.close()
+    p2.close()
+    p3.close()
+    p4.close()
 
     list.append(data1)
     list.append(data2)
     list.append(data3)
     list.append(data4)
 
-    p1 = multiprocessing.Process(target=sort_to_lists)
+    print(list)
+    #p1 = multiprocessing.Process(target=sort_to_lists)
 
-    #print(list)
+    p5 = Pool(processes=10)
+    p6 = Pool(processes=10)
+    p7 = Pool(processes=10)
+    p8 = Pool(processes=10)
+
+    ms1 = p5.map(send_ms1_list, (i for i in enumerate(list[:])))
+    ms2 = p6.map(send_ms2_list, (i for i in enumerate(list[:])))
+    ms3 = p7.map(send_ms3_list, (i for i in enumerate(list[:])))
+    ms4 = p8.map(send_ms4_list, (i for i in enumerate(list[:])))
+
+    p5.close()
+    p6.close()
+    p7.close()
+    p8.close()
+
+    list_for_1.append(ms1)
+    list_for_2.append(ms2)
+    list_for_3.append(ms3)
+    list_for_4.append(ms4)
+    
+    
     print(list_for_1)
     print(list_for_2)
     print(list_for_3)
     print(list_for_4)
 
-    print(list[0][2])
-
-
-
+    #print(list[0][2])
 
