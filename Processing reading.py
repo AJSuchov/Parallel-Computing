@@ -3,9 +3,11 @@ from openpyxl import load_workbook
 import multiprocessing
 from multiprocessing import Pool
 import time
+from copy import copy, deepcopy
+from operator import itemgetter
 # set file path
-#filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
-filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
+filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
+#filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
 # load demo.xlsx 
 wb=load_workbook(filepath,data_only = True)
 # select demo.xlsx
@@ -19,11 +21,15 @@ max_column=sheet.max_column
 
 
 list = [] #go back an name this main list
+global list_for_1
+global list_for_2
+global list_for_3
+global list_for_4
+
 list_for_1 = []
 list_for_2 = []
 list_for_3 = []
 list_for_4 = []
-
 
 def print_read1(k):
     alist = []
@@ -39,43 +45,37 @@ def print_read1(k):
      # print new line
     return alist
 
-def send_ms1_list(k):
+def send_ms1_list(k): #k[0] = ['Weisner', 'Jacob', 4, 0]
     list_ms1 = []
-    #for i in list:
-    #for n in k:
-    #for n in list[k]:
-    if list[k][:][2] == 1:
-        for j in range(1,max_column+1):
-                # get particular cell value    
-            cell_obj=sheet.cell(row=k,column=j)
-                # print cell value     
-                #list.append(cell_obj.value)
-            list_ms1.append(cell_obj.value) 
+    m = []
+    if k[2] == 1:
+        m = deepcopy(k)
+        list_ms1.extend(m)
     return list_ms1
 
-def send_ms2_list():
-    list_ms1 = []
+def send_ms2_list(k):
+    list_ms2 = []
+    m = []
+    if k[2] == 2:
+        m = deepcopy(k)
+        list_ms2.extend(m)
     return list_ms2
 
-def send_ms3_list():
-    list_ms1 = []
+def send_ms3_list(k):
+    list_ms3 = []
+    m = []
+    if k[2] == 3:
+        m = deepcopy(k)
+        list_ms3.extend(m)
     return list_ms3
 
-def send_ms4_list():
-    list_ms1 = []
+def send_ms4_list(k):
+    list_ms4 = []
+    m = []
+    if k[2] == 4:
+        m = deepcopy(k)
+        list_ms4.extend(m)
     return list_ms4
-
-def sort_to_lists():
-    for i in list:
-        for j in i:
-            if list[i][j][2] == 1:
-                list_for_1.append(list[i][j])
-            elif list[i][j][2] == 2:
-                list_for_2.append(list[i][j])
-            elif list[i][j][2] == 3:
-                list_for_3.append(list[i][j])
-            elif list[i][j][2] == 4:
-                list_for_4.append(list[i][j])
 
 if __name__ == '__main__':
     p1 = Pool(processes=10)
@@ -93,39 +93,50 @@ if __name__ == '__main__':
     p3.close()
     p4.close()
 
-    list.append(data1)
-    list.append(data2)
-    list.append(data3)
-    list.append(data4)
+    
+    #See if I can make this happen in parallel as well.
+    pext1 = multiprocessing.Process(list.extend(data1))
+    pext2 = multiprocessing.Process(list.extend(data2))
+    pext3 = multiprocessing.Process(list.extend(data3))
+    pext4 = multiprocessing.Process(list.extend(data4))
 
-    print(list)
-    #p1 = multiprocessing.Process(target=sort_to_lists)
+    pext1.start()
+    pext2.start()
+    pext3.start()
+    pext4.start()
 
     p5 = Pool(processes=10)
     p6 = Pool(processes=10)
     p7 = Pool(processes=10)
     p8 = Pool(processes=10)
 
-    ms1 = p5.map(send_ms1_list, (i for i in enumerate(list[:])))
-    ms2 = p6.map(send_ms2_list, (i for i in enumerate(list[:])))
-    ms3 = p7.map(send_ms3_list, (i for i in enumerate(list[:])))
-    ms4 = p8.map(send_ms4_list, (i for i in enumerate(list[:])))
+    ms1 = p5.map(send_ms1_list,list) 
+    ms2 = p6.map(send_ms2_list,list)
+    ms3 = p7.map(send_ms3_list,list)
+    ms4 = p8.map(send_ms4_list,list)
 
     p5.close()
     p6.close()
     p7.close()
     p8.close()
 
-    list_for_1.append(ms1)
-    list_for_2.append(ms2)
-    list_for_3.append(ms3)
-    list_for_4.append(ms4)
-    
-    
+    #make parallel
+    list_for_1 = [x for x in ms1 if x != []]
+    list_for_2 = [x for x in ms2 if x != []]
+    list_for_3 = [x for x in ms3 if x != []]
+    list_for_4 = [x for x in ms4 if x != []]
+
+    list_for_1 = sorted(list_for_1, key = itemgetter(0))
+    list_for_2 = sorted(list_for_2, key = itemgetter(0))
+    list_for_3 = sorted(list_for_3, key = itemgetter(0))
+    list_for_4 = sorted(list_for_4, key = itemgetter(0))
+
     print(list_for_1)
     print(list_for_2)
     print(list_for_3)
     print(list_for_4)
 
-    #print(list[0][2])
+    
+
+
 
