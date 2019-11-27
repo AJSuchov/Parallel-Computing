@@ -8,8 +8,8 @@ from operator import itemgetter
 ############# Retrieve excel file to read
 
 # set file path to retrieve file
-#filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
-filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
+filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
+#filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
 
 # load demo.xlsx 
 wb=load_workbook(filepath,data_only = True)
@@ -28,7 +28,8 @@ max_column=sheet.max_column
 ########### Appending another excel sheet with sorted values ###############################
 ######## This is to open that new workbook which will be used latter #######################
 
-filepath2="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Sorted_Roster_Blank_Sequential.xlsx"
+filepath2="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Sorted_Roster_Blank_Sequential.xlsx"
+#filepath2="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Sorted_Roster_Blank_Sequential.xlsx"
 
 wb2=load_workbook(filepath2)
 
@@ -47,6 +48,7 @@ def print_read1(start,end):
     alist = []
     
     for i in range(start,end):
+        time.sleep(0.5)
     # iterate over all columns
         blist = []
         for j in range(1,max_column+1):
@@ -61,6 +63,7 @@ def print_read1(start,end):
 
 def find_ms_lvl(use_list):
     for cadet in use_list:
+        time.sleep(0.5)
         if cadet[2] == 1:
             list_for_1.append(cadet)
         elif cadet[2] == 2:
@@ -72,10 +75,11 @@ def find_ms_lvl(use_list):
 
 def extend_new_main(sorted_list):
     for i in sorted_list:
+        time.sleep(0.5)
         mainlist.extend(i)
 
 if __name__ == '__main__':
-
+    starttime = time.time()
     list = print_read1(2,max_row+1)
 
     find_ms_lvl(list)
@@ -94,26 +98,10 @@ if __name__ == '__main__':
     mainlist.insert(0,header)
     
     for cadet in mainlist:
+        time.sleep(0.5)
         sheet2.append(cadet)
 
     wb2.save(filepath2)
-
+    print('That took {} seconds'.format(time.time() - starttime))
     
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
