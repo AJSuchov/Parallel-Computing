@@ -10,8 +10,8 @@ from operator import itemgetter
 ############# Retrieve excel file to read
 
 # set file path to retrieve file
-#filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
-filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
+filepath="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Absence_Roster.xlsx"
+#filepath="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Absence_Roster.xlsx"
 
 # load demo.xlsx 
 wb=load_workbook(filepath,data_only = True)
@@ -30,9 +30,12 @@ max_column=sheet.max_column
 ########### Appending another excel sheet with sorted values ###############################
 ######## This is to open that new workbook which will be used latter #######################
 
-filepath2="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Sorted_Roster_Blank.xlsx"
+filepath2="C:\\Users\\AJ Suchovsky\\Desktop\\Multiprocess examples\\Sorted_Roster_Blank.xlsx"
+#filepath2="C:\\Users\\suchovaj\\Desktop\\Parallel Python\\Sorted_Roster_Blank.xlsx"
 
 wb2=load_workbook(filepath2)
+
+global sheet2
 
 sheet2=wb2.active
 
@@ -43,14 +46,17 @@ global list_for_1
 global list_for_2
 global list_for_3
 global list_for_4
+global mainlist
 
 list_for_1 = []
 list_for_2 = []
 list_for_3 = []
 list_for_4 = []
+mainlist = []
 
 def print_read1(k):
     alist = []
+    time.sleep(0.5)
     # iterate over all columns
     for j in range(1,max_column+1):
           # get particular cell value    
@@ -62,6 +68,7 @@ def print_read1(k):
     return alist
 
 def send_ms1_list(k): #k[0] = ['Weisner', 'Jacob', 4, 0]
+    time.sleep(0.5)
     list_ms1 = []
     m = []
     if k[2] == 1:
@@ -70,6 +77,7 @@ def send_ms1_list(k): #k[0] = ['Weisner', 'Jacob', 4, 0]
     return list_ms1
 
 def send_ms2_list(k):
+    time.sleep(0.5)
     list_ms2 = []
     m = []
     if k[2] == 2:
@@ -78,6 +86,7 @@ def send_ms2_list(k):
     return list_ms2
 
 def send_ms3_list(k):
+    time.sleep(0.5)
     list_ms3 = []
     m = []
     if k[2] == 3:
@@ -86,6 +95,7 @@ def send_ms3_list(k):
     return list_ms3
 
 def send_ms4_list(k):
+    time.sleep(0.5)
     list_ms4 = []
     m = []
     if k[2] == 4:
@@ -94,18 +104,30 @@ def send_ms4_list(k):
     return list_ms4
 
 def remove_empty_brackets(testList):
+    time.sleep(0.5)
     return testList
 
 def sort_list(testList):
+    time.sleep(0.5)
     return testList
+
+def return_append(testList):
+    time.sleep(0.5)
+    return testList
+
+def append_sheet(list_added):
+    time.sleep(0.5)
+    return list_added
 
 #############################################################################################################
 
 if __name__ == '__main__':
-    p1 = Pool(processes=10)
-    p2 = Pool(processes=10)
-    p3 = Pool(processes=10)
-    p4 = Pool(processes=10)
+    starttime = time.time()
+    
+    p1 = Pool(processes=1)
+    p2 = Pool(processes=1)
+    p3 = Pool(processes=1)
+    p4 = Pool(processes=1)
 
     data1 = p1.map(print_read1, [i for i in range(2,int(max_row/4))])
     data2 = p2.map(print_read1, [i for i in range(int(max_row/4),int(max_row/4)*2)])
@@ -129,10 +151,10 @@ if __name__ == '__main__':
     pext3.start()
     pext4.start()
 
-    p5 = Pool(processes=10)
-    p6 = Pool(processes=10)
-    p7 = Pool(processes=10)
-    p8 = Pool(processes=10)
+    p5 = Pool(processes=1)
+    p6 = Pool(processes=1)
+    p7 = Pool(processes=1)
+    p8 = Pool(processes=1)
 
     ms1 = p5.map(send_ms1_list,list) 
     ms2 = p6.map(send_ms2_list,list)
@@ -145,10 +167,10 @@ if __name__ == '__main__':
     p8.close()
 
 ###################################################################################
-    p9 = Pool(processes=10)
-    p10 = Pool(processes=10)
-    p11 = Pool(processes=10)
-    p12 = Pool(processes=10)
+    p9 = Pool(processes=1)
+    p10 = Pool(processes=1)
+    p11 = Pool(processes=1)
+    p12 = Pool(processes=1)
 
     #make parallel
     list_for_1 = p9.map(remove_empty_brackets, [x for x in ms1 if x != []])
@@ -162,10 +184,10 @@ if __name__ == '__main__':
     p12.close()
 
 #####################################################################################
-    p13 = Pool(processes=10)
-    p14 = Pool(processes=10)
-    p15 = Pool(processes=10)
-    p16 = Pool(processes=10)
+    p13 = Pool(processes=1)
+    p14 = Pool(processes=1)
+    p15 = Pool(processes=1)
+    p16 = Pool(processes=1)
 
     list_for_1 = p13.map(sort_list, [sorted(list_for_1, key=itemgetter(0))])
     list_for_2 = p14.map(sort_list, [sorted(list_for_2, key=itemgetter(0))])
@@ -178,33 +200,47 @@ if __name__ == '__main__':
     p16.close()
 
 ####################################################################################
-
-    mainlist = []
-
-    for i in list_for_1:
-        mainlist.extend(i)
-
-    for i in list_for_2:
-        mainlist.extend(i)
-
-    for i in list_for_3:
-        mainlist.extend(i)
-
-    for i in list_for_4:
-        mainlist.extend(i)
-
-##################################################################################
     header = ['Last Name', 'First Name', 'MS Level', 'Absences']
     mainlist.insert(0,header)
     
-    for cadet in mainlist:
-        sheet2.append(cadet)
+    pext5 = multiprocessing.Process(mainlist.extend(i for i in list_for_1[0]))
+    pext6 = multiprocessing.Process(mainlist.extend(i for i in list_for_2[0]))
+    pext7 = multiprocessing.Process(mainlist.extend(i for i in list_for_3[0]))
+    pext8 = multiprocessing.Process(mainlist.extend(i for i in list_for_4[0]))
+
+    pext5.start()
+    pext6.start()
+    pext7.start()
+    pext8.start()
+
+##    for i in list_for_1:
+##        time.sleep(0.5)
+##        mainlist.extend(i)
+##
+##    for i in list_for_2:
+##        time.sleep(0.5)
+##        mainlist.extend(i)
+##
+##    for i in list_for_3:
+##        time.sleep(0.5)
+##        mainlist.extend(i)
+##
+##    for i in list_for_4:
+##        time.sleep(0.5)
+##        mainlist.extend(i)
+
+##################################################################################
+    
+    with Pool(1) as p:
+        for number in range(0,len(mainlist)-1):
+            cadet = p.map(append_sheet, [i for i in mainlist])
+            sheet2.append(cadet[number])
 
     wb2.save(filepath2)
 
+    print('That took {} seconds'.format(time.time() - starttime))
 
     
-
 
 
 
