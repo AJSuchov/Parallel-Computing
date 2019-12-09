@@ -1,1 +1,8 @@
-Left blank for holder.
+Description of what excel file does what.
+
+Absence_Roster: 100 entries
+Large_Roster_Test: 1000 entries
+Absence_Reoster_Super_Large: 10000 entries
+
+Sorted_Roster_Blank_Sequential: Only used by Sequential program and displays results.
+Sorted_Roster_Blank: A blank file that is written to by any program except Sequential. Must delete after each use.
